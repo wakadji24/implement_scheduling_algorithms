@@ -33,11 +33,7 @@ func (in input) fifo() {
 		avtat += in[i][7]
 	}
 
-	avwt, avtat = in.avTime(avwt, avtat)
-
-	fmt.Println("Average Waiting Time: ", avwt)
-	fmt.Println("Average Turnaround Time: ", avtat)
-	fmt.Println(in)
+	in.avTime(avwt, avtat)
 }
 
 func (in input) RoundRobin() {
@@ -79,11 +75,7 @@ func (in input) RoundRobin() {
 		avtat += in[i][7]
 	}
 
-	avwt, avtat = in.avTime(avwt, avtat)
-
-	fmt.Println("Average Waiting Time: ", avwt)
-	fmt.Println("Average Turnaround Time: ", avtat)
-	fmt.Println(in)
+	in.avTime(avwt, avtat)
 }
 
 func (in input) SJF() {
@@ -122,11 +114,7 @@ func (in input) SJF() {
 		avtat += in[i][7]
 	}
 
-	avwt, avtat = in.avTime(avwt, avtat)
-
-	fmt.Println("Average Waiting Time: ", avwt)
-	fmt.Println("Average Turnaround Time: ", avtat)
-	fmt.Println(in)
+	in.avTime(avwt, avtat)
 }
 
 func quicksort(a [][]int) input {
@@ -155,9 +143,11 @@ func quicksort(a [][]int) input {
 	return a
 }
 
-func (in input) avTime(avwt int, avtat int) (int, int) {
+func (in input) avTime(avwt int, avtat int) {
 	avwt /= len(in)
 	avtat /= len(in)
 
-	return avwt, avtat
+	fmt.Println("Average Waiting Time: ", avwt)
+	fmt.Println("Average Turnaround Time: ", avtat)
+	fmt.Println(in)
 }
