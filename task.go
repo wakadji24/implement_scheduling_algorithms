@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math/rand"
+)
 
 type input [][]int
 
@@ -80,6 +83,46 @@ func (in input) RoundRobin() {
 	fmt.Println("Average Waiting Time: ", avwt)
 	fmt.Println("Average Turnaround Time: ", avtat)
 	fmt.Println(in)
+}
+
+func (in input) SJF() {
+	// var avwt int
+	// var avtat int
+	proc := len(in)
+
+	for i := 0; i < proc; i++ {
+		for j := 0; j < proc-i; j++ {
+			if in[j][0] > in[j+1][0] {
+				in[j][0], in[j+1][0] = in[j+1][0], in[j][0]
+			}
+		}
+	}
+}
+
+func quicksort(a [][]int) input {
+	if len(a) < 2 {
+		return a
+	}
+
+	left, right := 0, len(a)-1
+
+	pivot := rand.Int() % len(a)
+
+	a[pivot], a[right] = a[right], a[pivot]
+
+	for i, _ := range a {
+		if a[i][1] < a[right][1] {
+			a[left], a[i] = a[i], a[left]
+			left++
+		}
+	}
+
+	a[left], a[right] = a[right], a[left]
+
+	quicksort(a[:left][:])
+	quicksort(a[left+1:][:])
+
+	return a
 }
 
 func (in input) avTime(avwt int, avtat int) (int, int) {

@@ -1,6 +1,10 @@
 package main
 
+import "fmt"
+
 func main() {
 	input := newTask()
-	input.RoundRobin()
+	quicksort(input)
+	fmt.Println(input)
+	// input.RoundRobin()
 }
