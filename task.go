@@ -82,22 +82,32 @@ func (in input) SJF() {
 	var avwt int
 	var avtat int
 	proc := len(in)
-	queue := []int{}
+	// queue := []int{}
 
 	for i := 0; i < proc; i++ {
+		pos := i
 		for j := i + 1; j < proc; j++ {
-			if in[i][3] > in[j][5] {
-				queue = append(queue, j)
+			if in[j][3] < in[pos][3] {
+				pos = j
 			}
 		}
-		for k := 0; k < len(queue); k++ {
-			for l := k + 1; l < len(queue); l++ {
-				if in[queue[k]][3] > in[queue[l]][3] {
-					in[queue[k]], in[queue[l]] = in[queue[l]], in[queue[k]]
-				}
-			}
-		}
+		in[i], in[pos] = in[pos], in[i]
 	}
+
+	// for i := 0; i < proc; i++ {
+	// 	for j := i + 1; j < proc; j++ {
+	// 		if in[i][3] > in[j][5] {
+	// 			queue = append(queue, j)
+	// 		}
+	// 	}
+	// 	for k := 0; k < len(queue); k++ {
+	// 		for l := k + 1; l < len(queue); l++ {
+	// 			if in[queue[k]][3] > in[queue[l]][3] {
+	// 				in[queue[k]], in[queue[l]] = in[queue[l]], in[queue[k]]
+	// 			}
+	// 		}
+	// 	}
+	// }
 
 	in[0][6] = 0
 
