@@ -19,7 +19,16 @@ func newTask() input {
 		[]int{6, 3, 20, 50, 3, 5},
 		[]int{7, 2, 50, 10, 5, 5},
 		[]int{8, 2, 10, 30, 3, 5},
-		[]int{9, 1, 40, 20, 5, 500}}
+		[]int{9, 1, 40, 20, 5, 16},
+		[]int{10, 1, 60, 10, 10, 0},
+		[]int{11, 1, 21, 10, 10, 6},
+		[]int{12, 1, 32, 10, 10, 16},
+		[]int{13, 1, 43, 10, 10, 71},
+		[]int{14, 1, 11, 10, 10, 4},
+		[]int{15, 1, 35, 10, 10, 7},
+		[]int{16, 1, 2, 14, 10, 89},
+		[]int{17, 1, 2, 14, 10, 460},
+		[]int{18, 3, 24, 3, 12, 40}}
 
 	for i := 0; i < len(task); i++ {
 		// Sum long process, bt, and i/o
@@ -111,15 +120,15 @@ func SJF(in input) [][]int {
 	proc := len(in)
 	queue := []int{}
 
-	for i := 0; i < proc; i++ {
-		pos := i
-		for j := i + 1; j < proc; j++ {
-			if in[j][3] < in[pos][3] {
-				pos = j
-			}
-		}
-		in[i], in[pos] = in[pos], in[i]
-	}
+	// for i := 0; i < proc; i++ {
+	// 	pos := i
+	// 	for j := i + 1; j < proc; j++ {
+	// 		if in[j][3] < in[pos][3] {
+	// 			pos = j
+	// 		}
+	// 	}
+	// 	in[i], in[pos] = in[pos], in[i]
+	// }
 
 	for i := 0; i < proc; i++ {
 		for j := i + 1; j < proc; j++ {
