@@ -45,7 +45,12 @@ func newTask() input {
 	return task
 }
 
-func schedulingProcess(wg *sync.WaitGroup, containerFifo [][]int, containerRoundRobin [][]int, containerShortestJobFirst [][]int) ([][]int, [][]int, [][]int) {
+func schedulingProcess(in [][]int) {
+	var wg sync.WaitGroup
+	containerFifo := [][]int{}
+	containerRoundRobin := [][]int{}
+	containerShortestJobFirst := [][]int{}
+
 	queueFIFO := [][]int{}
 	queueRoundRobin := [][]int{}
 	queueShortestJobFirst := [][]int{}
@@ -56,66 +61,91 @@ func schedulingProcess(wg *sync.WaitGroup, containerFifo [][]int, containerRound
 	clockFIFO := 0
 	clockSJF := 0
 
-	wg.Add(3)
-	go func() {
-		for i := 0; i < len(containerFifo); i++ {
-			queueFIFO = append(queueFIFO, containerFifo[i])
-			clockFIFO += containerFifo[i][3]
-			temporaryFIFO = append(temporaryFIFO, containerFifo[i])
-			for j := i + 1; j < len(containerFifo); j++ {
-				if len(temporaryFIFO) >= 7 && clockFIFO >= containerFifo[j][2] {
-					containerRoundRobin = append(containerRoundRobin, containerFifo[j])
-					containerFifo = append(containerFifo[0:j], containerFifo[j+1:]...)
-					// j is decrement for container
-					j--
-				} else if clockFIFO >= containerFifo[j][2] {
-					temporaryFIFO = append(temporaryFIFO, containerFifo[j])
-				}
-			}
-			temporaryFIFO = nil
+	for i := 0; i < len(in); i++ {
+		if in[i][1] == 1 {
+			containerFifo = append(containerFifo, in[i])
 		}
-		defer wg.Done()
-	}()
+		if in[i][1] == 2 {
+			containerRoundRobin = append(containerRoundRobin, in[i])
+		}
+		if in[i][1] == 3 {
+			containerShortestJobFirst = append(containerShortestJobFirst, in[i])
+		}
+	}
+	wg.Add(1)
+	go func(wg *sync.WaitGroup) {
+		for {
+			for i := 0; i < len(containerFifo); i++ {
+				queueFIFO = append(queueFIFO, containerFifo[0])
+				clockFIFO += containerFifo[0][3]
+				temporaryFIFO = append(temporaryFIFO, containerFifo[0])
 
-	go func() {
-
-		for k := 0; k < len(containerRoundRobin); k++ {
-			if containerRoundRobin[k][3] > cycle {
-				temporaryRR := make([]int, len(containerRoundRobin[k]))
-				copy(temporaryRR, containerRoundRobin[k])
-				temporaryRR[3] -= 20
-				containerShortestJobFirst = append(containerShortestJobFirst, temporaryRR)
-				queueRoundRobin = append(queueRoundRobin, containerRoundRobin[k])
-			} else {
-				queueRoundRobin = append(queueRoundRobin, containerRoundRobin[k])
-			}
-			for _, q := range queueRoundRobin {
-				if q[3] > cycle {
-					q[3] = 20
+				for j := 1; j < len(containerFifo); j++ {
+					if len(temporaryFIFO) >= 7 && clockFIFO >= containerFifo[j][2] {
+						containerRoundRobin = append(containerRoundRobin, containerFifo[j])
+						containerFifo = append(containerFifo[0:j], containerFifo[j+1:]...)
+						// j is decrement for container
+						j--
+					} else if clockFIFO >= containerFifo[j][2] {
+						temporaryFIFO = append(temporaryFIFO, containerFifo[j])
+					}
 				}
+				temporaryFIFO = nil
+				containerFifo = containerFifo[1:]
+			}
+
+			for i := 0; i < len(containerRoundRobin); i++ {
+
+				if containerRoundRobin[0][3] > cycle {
+					temporaryRR := make([]int, len(containerRoundRobin[0]))
+					copy(temporaryRR, containerRoundRobin[0])
+					temporaryRR[3] -= 20
+					containerShortestJobFirst = append(containerShortestJobFirst, temporaryRR)
+					queueRoundRobin = append(queueRoundRobin, containerRoundRobin[0])
+				} else {
+					queueRoundRobin = append(queueRoundRobin, containerRoundRobin[0])
+				}
+				for _, q := range queueRoundRobin {
+					if q[3] > cycle {
+						q[3] = 20
+					}
+				}
+				containerRoundRobin = containerRoundRobin[1:]
+			}
+
+			for i := 0; i < len(containerShortestJobFirst); i++ {
+				queueShortestJobFirst = append(queueShortestJobFirst, containerShortestJobFirst[0])
+				clockSJF += containerShortestJobFirst[0][3]
+
+				for m := 1; m < len(containerShortestJobFirst); m++ {
+					if clockSJF > (containerShortestJobFirst[m][2] + 20) {
+						containerFifo = append(containerFifo, containerShortestJobFirst[m])
+						containerShortestJobFirst = append(containerShortestJobFirst[:m], containerShortestJobFirst[m+1:]...)
+						m--
+					}
+				}
+				containerShortestJobFirst = containerShortestJobFirst[1:]
+			}
+
+			if len(containerFifo) < 1 && len(containerRoundRobin) < 1 && len(containerShortestJobFirst) < 1 {
+				defer wg.Done()
+				break
 			}
 		}
-		defer wg.Done()
-	}()
+	}(&wg)
 
-	go func() {
-
-		for l := 0; l < len(containerShortestJobFirst); l++ {
-			queueShortestJobFirst = append(queueShortestJobFirst, containerShortestJobFirst[l])
-			clockSJF += containerShortestJobFirst[l][3]
-			for m := l + 1; m < len(containerShortestJobFirst); m++ {
-				if clockSJF > (containerShortestJobFirst[m][2] + 20) {
-					containerFifo = append(containerFifo, containerShortestJobFirst[m])
-					containerShortestJobFirst = append(containerShortestJobFirst[:m], containerShortestJobFirst[m+1:]...)
-					m--
-				}
-			}
-		}
-		defer wg.Done()
-	}()
 	wg.Wait()
+	fmt.Println(queueFIFO)
+	fmt.Println(queueRoundRobin)
+	fmt.Println(queueShortestJobFirst)
 
-	return queueFIFO, queueRoundRobin, queueShortestJobFirst
+	fifo(queueFIFO)
+	roundRobin(queueRoundRobin)
+	shortestJobFirst(queueShortestJobFirst)
+	fmt.Println("==============================================")
+	fmt.Println(queueFIFO)
+	fmt.Println(queueRoundRobin)
+	fmt.Println(queueShortestJobFirst)
 }
 
 //implement fifo algorithm
