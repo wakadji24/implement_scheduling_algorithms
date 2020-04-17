@@ -1,35 +1,48 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"math/rand"
+	"os"
+	"strconv"
+	"strings"
 	"sync"
 )
 
 type input [][]int
 
-func newTask() input {
-	task := make(input, 8)
-	//bt,at,wt,tat
-	//id[0], prior[1], long process[2], bt[3], i/o[4], at[5]
-	task = [][]int{[]int{1, 1, 40, 20, 5, 7},
-		[]int{2, 1, 60, 10, 10, 0},
-		[]int{3, 3, 20, 5, 2, 5},
-		[]int{4, 2, 30, 15, 5, 5},
-		[]int{5, 3, 20, 10, 5, 5},
-		[]int{6, 3, 20, 50, 3, 5},
-		[]int{7, 2, 50, 10, 5, 5},
-		[]int{8, 2, 10, 30, 3, 5},
-		[]int{9, 1, 40, 20, 5, 16},
-		[]int{10, 1, 60, 10, 10, 0},
-		[]int{11, 1, 21, 10, 10, 6},
-		[]int{12, 1, 32, 10, 10, 16},
-		[]int{13, 1, 43, 10, 10, 71},
-		[]int{14, 1, 11, 10, 10, 4},
-		[]int{15, 1, 35, 10, 10, 7},
-		[]int{16, 1, 2, 14, 10, 89},
-		[]int{17, 1, 2, 14, 10, 460},
-		[]int{18, 3, 24, 3, 12, 40}}
+func newTaskFromFile(filename string) input {
+	t := []string{}
+	temporaryTask := [][]string{}
+	bs, err := os.Open(filename)
+
+	if err != nil {
+		// Option 1 : Log the error & return a call to newDeck()
+		// Option 2 : Log the error & Quit the program
+		fmt.Println("Error : ", err)
+		os.Exit(1)
+	}
+
+	var s []string
+	scanner := bufio.NewScanner(bs)
+	for scanner.Scan() {
+		s = append(s, scanner.Text())
+	}
+
+	for i := 0; i < len(s); i++ {
+		t = strings.Split(s[i], " ")
+		temporaryTask = append(temporaryTask, t)
+	}
+
+	task := make([][]int, len(temporaryTask))
+
+	for i := 0; i < len(temporaryTask); i++ {
+		for j := 0; j < len(temporaryTask[0]); j++ {
+			n, _ := strconv.Atoi(temporaryTask[i][j])
+			task[i] = append(task[i], n)
+		}
+	}
 
 	for i := 0; i < len(task); i++ {
 		// Sum long process, bt, and i/o
