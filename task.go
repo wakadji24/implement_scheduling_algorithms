@@ -58,7 +58,7 @@ func newTaskFromFile(filename string) input {
 	return task
 }
 
-func schedulingProcess(in [][]int) {
+func schedulingProcess(in [][]int) [][]int {
 	var wg sync.WaitGroup
 	containerFifo := [][]int{}
 	containerRoundRobin := [][]int{}
@@ -148,17 +148,35 @@ func schedulingProcess(in [][]int) {
 	}(&wg)
 
 	wg.Wait()
-	fmt.Println(queueFIFO)
-	fmt.Println(queueRoundRobin)
-	fmt.Println(queueShortestJobFirst)
 
 	fifo(queueFIFO)
 	roundRobin(queueRoundRobin)
 	shortestJobFirst(queueShortestJobFirst)
-	fmt.Println("==============================================")
-	fmt.Println(queueFIFO)
-	fmt.Println(queueRoundRobin)
-	fmt.Println(queueShortestJobFirst)
+
+	var n int
+
+	result := [][]int{}
+	if len(queueFIFO) >= len(queueRoundRobin) && len(queueFIFO) >= len(queueShortestJobFirst) {
+		n = len(queueFIFO)
+	} else if len(queueRoundRobin) >= len(queueShortestJobFirst) {
+		n = len(queueRoundRobin)
+	} else {
+		n = len(queueShortestJobFirst)
+	}
+
+	for i := 0; i < n; i++ {
+		if i < len(queueFIFO) {
+			result = append(result, queueFIFO[i])
+		}
+		if i < len(queueRoundRobin) {
+			result = append(result, queueRoundRobin[i])
+		}
+		if i < len(queueShortestJobFirst) {
+			result = append(result, queueShortestJobFirst[i])
+		}
+	}
+
+	return result
 }
 
 //implement fifo algorithm
