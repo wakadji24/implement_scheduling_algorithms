@@ -76,7 +76,7 @@
                 <div class="col-lg-4">
                     <div class="card border-0 shadow mb-4 d-none d-lg-block">
                         <div class="card-body">
-                            <form method="post" action="/process" enctype="multipart/form-data">
+                            <form method="post" action="/" enctype="multipart/form-data">
                                 <h5 class-mb-5>Silahkan pilih file :</h5>
                                 <input type="file" name="file" required /><br>
                                 <br>
@@ -118,150 +118,16 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            {{range $elem := .Result}}
                                             <tr>
-                                                <th scope="row">1</th>
-                                                <td>1</td>
-                                                <td>40</td>
-                                                <td>20</td>
-                                                <td>5</td>
-                                                <td>7</td>
+                                                <td>{{index $elem 0}}</td>
+                                                <td>{{index $elem 1}}</td>
+                                                <td>{{index $elem 2}}</td>
+                                                <td>{{index $elem 3}}</td>
+                                                <td>{{index $elem 4}}</td>
+                                                <td>{{index $elem 5}}</td>
                                             </tr>
-                                            <tr>
-                                                <th scope="row">2</th>
-                                                <td>1</td>
-                                                <td>60</td>
-                                                <td>10</td>
-                                                <td>10</td>
-                                                <td>0</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">3</th>
-                                                <td>3</td>
-                                                <td>20</td>
-                                                <td>5</td>
-                                                <td>2</td>
-                                                <td>5</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">4</th>
-                                                <td>2</td>
-                                                <td>30</td>
-                                                <td>15</td>
-                                                <td>5</td>
-                                                <td>5</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">5</th>
-                                                <td>3</td>
-                                                <td>20</td>
-                                                <td>10</td>
-                                                <td>5</td>
-                                                <td>5</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">6</th>
-                                                <td>3</td>
-                                                <td>20</td>
-                                                <td>50</td>
-                                                <td>3</td>
-                                                <td>5</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">7</th>
-                                                <td>2</td>
-                                                <td>50</td>
-                                                <td>10</td>
-                                                <td>5</td>
-                                                <td>5</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">8</th>
-                                                <td>2</td>
-                                                <td>10</td>
-                                                <td>30</td>
-                                                <td>3</td>
-                                                <td>5</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">9</th>
-                                                <td>1</td>
-                                                <td>40</td>
-                                                <td>20</td>
-                                                <td>5</td>
-                                                <td>16</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">10</th>
-                                                <td>1</td>
-                                                <td>60</td>
-                                                <td>10</td>
-                                                <td>10</td>
-                                                <td>0</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">11</th>
-                                                <td>1</td>
-                                                <td>21</td>
-                                                <td>10</td>
-                                                <td>10</td>
-                                                <td>6</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">12</th>
-                                                <td>1</td>
-                                                <td>32</td>
-                                                <td>10</td>
-                                                <td>10</td>
-                                                <td>16</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">13</th>
-                                                <td>1</td>
-                                                <td>43</td>
-                                                <td>10</td>
-                                                <td>10</td>
-                                                <td>71</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">14</th>
-                                                <td>1</td>
-                                                <td>11</td>
-                                                <td>10</td>
-                                                <td>10</td>
-                                                <td>4</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">15</th>
-                                                <td>1</td>
-                                                <td>35</td>
-                                                <td>10</td>
-                                                <td>10</td>
-                                                <td>7</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">16</th>
-                                                <td>1</td>
-                                                <td>2</td>
-                                                <td>14</td>
-                                                <td>10</td>
-                                                <td>89</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">17</th>
-                                                <td>1</td>
-                                                <td>2</td>
-                                                <td>14</td>
-                                                <td>10</td>
-                                                <td>460</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">18</th>
-                                                <td>3</td>
-                                                <td>24</td>
-                                                <td>3</td>
-                                                <td>12</td>
-                                                <td>40</td>
-                                            </tr>
+                                            {{end}}
                                         </tbody>
                                     </table>
                                 </div>
@@ -270,11 +136,95 @@
                     </div>
                 </div>
                 <!-- End of Data -->
+
+                <!-- Schedule Process -->
+                <div class="col-lg-12">
+                    <div class="card border-0 shadow mb-4">
+                        <div class="card border-2">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <h3>Hasil</h3>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <button class="btn btn-block btn-primary" type="button" data-toggle="collapse"
+                                            data-target="#collapseExample" aria-expanded="false"
+                                            aria-controls="collapseExample">
+                                            Klik untuk melihat data
+                                        </button>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="collapse" id="collapseExample">
+                                    <table class="table table-hover">
+                                        <thead class="thead">
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Priority</th>
+                                                <th>Arrival Time</th>
+                                                <th>Burst Time</th>
+                                                <th>Waiting Time</th>
+                                                <th>Turn Around Time</th>
+                                                <th>Process</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {{range $elem := .Result}}
+                                            <tr>
+                                                <td>{{index $elem 0}}</td>
+                                                <td>{{index $elem 1}}</td>
+                                                <td>{{index $elem 2}}</td>
+                                                <td>{{index $elem 3}}</td>
+                                                <td>{{index $elem 4}}</td>
+                                                <td>{{index $elem 5}}</td>
+                                                <td>
+                                                    {{$process := index $elem 6}}
+                                                    {{$prior := index $elem 1}}
+
+                                                    {{$cond0 := eq $process 0}}
+                                                    {{$cond1 := eq $process 1}}
+                                                    {{$cond2 := eq $process 2}}
+                                                    {{$cond3 := eq $process 3}}
+
+                                                    {{$prior1 := eq $prior 1}}
+                                                    {{$prior2 := eq $prior 2}}
+                                                    {{$prior3 := eq $prior 3}}
+
+                                                    {{if and $cond0 $prior1}}
+                                                    Process on FIFO
+                                                    {{end}}
+                                                    {{if and $cond0 $prior2}}
+                                                    Process on Round Robin
+                                                    {{end}}
+                                                    {{if and $cond0 $prior3}}
+                                                    Process on Shortest Job First
+                                                    {{end}}
+                                                    {{if $cond1}}
+                                                    Promotion to FIFO
+                                                    {{end}}
+                                                    {{if $cond2}}
+                                                    Demotion to Round Robin
+                                                    {{end}}
+                                                    {{if $cond3}}
+                                                    Demotion to SJF
+                                                    {{end}}
+                                                </td>
+                                            </tr>
+
+                                            {{end}}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End -->
             </div>
         </div>
     </div>
 
-    
+
     <!-- Information -->
     <section class="page-section bg-dark">
         <div class="container">
@@ -310,78 +260,6 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
     integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
 </script>
-
-</html>
-{{end}}
-
-{{define "result"}}
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scheduling</title>
-    <link rel="stylesheet" href="/static/style/style.css">
-</head>
-
-<body>
-    <table border="1">
-        <tr>
-            <th>ID</th>
-            <th>Priority</th>
-            <th>Arrival Time</th>
-            <th>Burst Time</th>
-            <th>Waiting Time</th>
-            <th>Turn Around Time</th>
-            <th>Process</th>
-        </tr>
-        {{range $elem := .Result}}
-        <tr>
-            <td>{{index $elem 0}}</td>
-            <td>{{index $elem 1}}</td>
-            <td>{{index $elem 2}}</td>
-            <td>{{index $elem 3}}</td>
-            <td>{{index $elem 4}}</td>
-            <td>{{index $elem 5}}</td>
-            <td>
-                {{$process := index $elem 6}}
-                {{$prior := index $elem 1}}
-
-                {{$cond0 := eq $process 0}}
-                {{$cond1 := eq $process 1}}
-                {{$cond2 := eq $process 2}}
-                {{$cond3 := eq $process 3}}
-
-                {{$prior1 := eq $prior 1}}
-                {{$prior2 := eq $prior 2}}
-                {{$prior3 := eq $prior 3}}
-
-                {{if and $cond0 $prior1}}
-                Process on FIFO
-                {{end}}
-                {{if and $cond0 $prior2}}
-                Process on Round Robin
-                {{end}}
-                {{if and $cond0 $prior3}}
-                Process on Shortest Job First
-                {{end}}
-                {{if $cond1}}
-                Promotion to FIFO
-                {{end}}
-                {{if $cond2}}
-                Demotion to Round Robin
-                {{end}}
-                {{if $cond3}}
-                Demotion to SJF
-                {{end}}
-            </td>
-        </tr>
-
-        {{end}}
-    </table>
-
-</body>
 
 </html>
 {{end}}
