@@ -50,11 +50,12 @@ func newTaskFromFile(filename string) input {
 		// add wt and tat
 		task[i] = append(task[i], 0)
 		task[i] = append(task[i], 0)
+		task[i] = append(task[i], 0)
 		// Removing Long process, bt, and i/o
 		task[i] = append(task[i][:2], task[i][5:]...)
 	}
 
-	// after the process the slice have id[0], prior[1], at[2], bt[3], wt[4], tat[5]
+	// after the process the slice have id[0], prior[1], at[2], bt[3], wt[4], tat[5], process[6]
 	return task
 }
 
@@ -95,7 +96,10 @@ func schedulingProcess(in [][]int) [][]int {
 
 				for j := 1; j < len(containerFifo); j++ {
 					if len(temporaryFIFO) >= 7 && clockFIFO >= containerFifo[j][2] {
-						containerRoundRobin = append(containerRoundRobin, containerFifo[j])
+						processFIFO := make([]int, len(containerFifo[0]))
+						copy(processFIFO, containerFifo[j])
+						processFIFO[6] = 2
+						containerRoundRobin = append(containerRoundRobin, processFIFO)
 						containerFifo = append(containerFifo[0:j], containerFifo[j+1:]...)
 						// j is decrement for container
 						j--
@@ -113,6 +117,7 @@ func schedulingProcess(in [][]int) [][]int {
 					temporaryRR := make([]int, len(containerRoundRobin[0]))
 					copy(temporaryRR, containerRoundRobin[0])
 					temporaryRR[3] -= 20
+					temporaryRR[6] = 3
 					containerShortestJobFirst = append(containerShortestJobFirst, temporaryRR)
 					queueRoundRobin = append(queueRoundRobin, containerRoundRobin[0])
 				} else {
@@ -132,7 +137,10 @@ func schedulingProcess(in [][]int) [][]int {
 
 				for m := 1; m < len(containerShortestJobFirst); m++ {
 					if clockSJF > (containerShortestJobFirst[m][2] + 20) {
-						containerFifo = append(containerFifo, containerShortestJobFirst[m])
+						processSJF := make([]int, len(containerShortestJobFirst[0]))
+						copy(processSJF, containerShortestJobFirst[m])
+						processSJF[6] = 1
+						containerFifo = append(containerFifo, processSJF)
 						containerShortestJobFirst = append(containerShortestJobFirst[:m], containerShortestJobFirst[m+1:]...)
 						m--
 					}
