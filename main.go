@@ -9,7 +9,7 @@ import (
 	"text/template"
 )
 
-//Result for struct
+//Schedule for struct
 type Schedule struct {
 	Result [][]int
 }
@@ -19,6 +19,9 @@ func main() {
 
 	http.HandleFunc("/", routeIndexGet)
 	http.HandleFunc("/process", routeSubmitPost)
+	http.Handle("/static/",
+		http.StripPrefix("/static/",
+			http.FileServer(http.Dir("assets"))))
 
 	fmt.Println("server started at localhost:9000")
 	http.ListenAndServe(":9000", nil)
@@ -31,7 +34,7 @@ func routeIndexGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var tmpl = template.Must(template.New("form").ParseFiles("index.html"))
+	var tmpl = template.Must(template.New("form").ParseFiles("views/index.html", "views/_header.html"))
 	var err = tmpl.ExecuteTemplate(w, "form", nil)
 
 	if err != nil {
@@ -45,7 +48,7 @@ func routeSubmitPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var tmpl = template.Must(template.New("result").ParseFiles("index.html"))
+	var tmpl = template.Must(template.New("result").ParseFiles("views/index.html", "views/_header.html"))
 
 	if err := r.ParseMultipartForm(1024); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -67,7 +70,7 @@ func routeSubmitPost(w http.ResponseWriter, r *http.Request) {
 
 	filename := handler.Filename
 
-	fileLocation := filepath.Join(dir, "files", filename)
+	fileLocation := filepath.Join(dir, "assets/files", filename)
 	targetFile, err := os.OpenFile(fileLocation, os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -75,7 +78,7 @@ func routeSubmitPost(w http.ResponseWriter, r *http.Request) {
 	}
 	defer targetFile.Close()
 
-	filelocation := "files/" + filename
+	filelocation := "assets/files/" + filename
 	in := newTaskFromFile(filelocation)
 	quicksort(in)
 
