@@ -1,3 +1,23 @@
+@import url('https://fonts.googleapis.com/css?family=Quicksand:400,700&display=swap');
+
 body {
-    background-color: blanchedalmond;
+    font-family: 'Quicksand', sans-serif;
+}
+
+.bd-navbar {
+    min-height: 4rem;
+    background-color: #3498db;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, .05), inset 0 -1px 0 rgba(0, 0, 0, .1);
+}
+
+.masthead {
+    padding: 2rem 0 2rem;
+    position: relative;
+    background-color: #dd3d31;
+    background-size: cover;
+    z-index: 0;
+}
+
+.page-section {
+    padding: 8rem 0;
 }
