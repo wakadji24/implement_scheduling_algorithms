@@ -16,6 +16,7 @@ type Schedule struct {
 	Result [][]int
 }
 
+// main program
 func main() {
 	runtime.GOMAXPROCS(2)
 
