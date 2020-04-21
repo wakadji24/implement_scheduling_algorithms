@@ -1,0 +1,9 @@
+{
+	"ImportPath": "github.com/wakadji24/implement_scheduling_algorithms",
+	"GoVersion": "go1.14",
+	"GodepVersion": "v80",
+	"Packages": [
+		"./..."
+	],
+	"Deps": []
+}
