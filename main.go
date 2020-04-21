@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -62,6 +63,11 @@ func routeIndexGet(w http.ResponseWriter, r *http.Request) {
 		}
 		defer targetFile.Close()
 
+		if _, err := io.Copy(targetFile, uploadedFile); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
 		filelocation := "assets/files/" + filename
 		in := newTaskFromFile(filelocation)
 		quicksort(in)
@@ -94,5 +100,4 @@ func routeSubmitPost(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "", http.StatusBadRequest)
 		return
 	}
-
 }
