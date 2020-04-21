@@ -94,10 +94,3 @@ func routeIndexGet(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "", http.StatusBadRequest)
 	}
 }
-
-func routeSubmitPost(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		http.Error(w, "", http.StatusBadRequest)
-		return
-	}
-}
