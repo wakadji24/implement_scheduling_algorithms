@@ -46,7 +46,6 @@ func newTaskFromFile(filename string) (input, input) {
 
 	initial := make([][]int, len(task))
 	copy(initial, task)
-	fmt.Println(initial)
 
 	for i := 0; i < len(task); i++ {
 		// Sum long process, bt, and i/o
