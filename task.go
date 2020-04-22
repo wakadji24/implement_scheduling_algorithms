@@ -12,7 +12,7 @@ import (
 
 type input [][]int
 
-func newTaskFromFile(filename string) input {
+func newTaskFromFile(filename string) (input, input) {
 	t := []string{}
 	temporaryTask := [][]string{}
 	bs, err := os.Open(filename)
@@ -44,6 +44,10 @@ func newTaskFromFile(filename string) input {
 		}
 	}
 
+	initial := make([][]int, len(task))
+	copy(initial, task)
+	fmt.Println(initial)
+
 	for i := 0; i < len(task); i++ {
 		// Sum long process, bt, and i/o
 		task[i] = append(task[i], task[i][2]+task[i][3]+task[i][4])
@@ -56,10 +60,10 @@ func newTaskFromFile(filename string) input {
 	}
 
 	// after the process the slice have id[0], prior[1], at[2], bt[3], wt[4], tat[5], process[6]
-	return task
+	return task, initial
 }
 
-func schedulingProcess(in [][]int) [][]int {
+func schedulingProcess(in [][]int) ([][]int, float64, float64) {
 	var wg sync.WaitGroup
 	containerFifo := [][]int{}
 	containerRoundRobin := [][]int{}
@@ -184,7 +188,9 @@ func schedulingProcess(in [][]int) [][]int {
 		}
 	}
 
-	return result
+	avwt, avtat := avTime(result)
+
+	return result, avwt, avtat
 }
 
 //implement fifo algorithm
@@ -334,10 +340,17 @@ func quicksort(a [][]int) input {
 	return a
 }
 
-func avTime(avwt int, avtat int, n int) {
-	avwt /= n
-	avtat /= n
+func avTime(in [][]int) (float64, float64) {
+	var waitingTime float64
+	var turnAroundtime float64
 
-	fmt.Println("Average Waiting Time: ", avwt)
-	fmt.Println("Average Turnaround Time: ", avtat)
+	for _, e := range in {
+		waitingTime += float64(e[4])
+		turnAroundtime += float64(e[5])
+	}
+	n := float64(len(in))
+	avwt := waitingTime / n
+	avtat := turnAroundtime / n
+
+	return avwt, avtat
 }

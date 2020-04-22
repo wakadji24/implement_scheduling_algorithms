@@ -3,10 +3,10 @@ package main
 import (
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"os"
 	"path/filepath"
+	"runtime"
 	"text/template"
 )
 
@@ -14,40 +14,29 @@ import (
 type Schedule struct {
 	Input  [][]int
 	Result [][]int
+	Avwt   float64
+	Avtat  float64
 }
 
 // main program
 func main() {
-	addr, err := determineListenAddress()
-	if err != nil {
-		log.Fatal(err)
-	}
+	runtime.GOMAXPROCS(2)
 
 	http.HandleFunc("/", routeIndexGet)
 	http.Handle("/static/",
 		http.StripPrefix("/static/",
 			http.FileServer(http.Dir("assets"))))
 
-	log.Printf("Listening on %s...\n", addr)
-	if err := http.ListenAndServe(addr, nil); err != nil {
-		panic(err)
-	}
+	fmt.Println("server started at localhost:9000")
+	http.ListenAndServe(":9000", nil)
 
-}
-
-func determineListenAddress() (string, error) {
-	port := os.Getenv("PORT")
-	if port == "" {
-		return "", fmt.Errorf("$PORT not set")
-	}
-	return ":" + port, nil
 }
 
 func routeIndexGet(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case "POST":
-		var tmpl = template.Must(template.New("form").ParseFiles("views/index.html", "views/_header.html"))
+		var tmpl = template.Must(template.New("form").ParseFiles("views/index.html"))
 
 		if err := r.ParseMultipartForm(1024); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -83,13 +72,14 @@ func routeIndexGet(w http.ResponseWriter, r *http.Request) {
 		}
 
 		filelocation := "assets/files/" + filename
-		in := newTaskFromFile(filelocation)
+		in, initial := newTaskFromFile(filelocation)
 		quicksort(in)
-
-		result := schedulingProcess(in)
+		result, avwt, avtat := schedulingProcess(in)
 		data := Schedule{
-			Input:  in,
+			Input:  initial,
 			Result: result,
+			Avwt:   avwt,
+			Avtat:  avtat,
 		}
 
 		err = tmpl.ExecuteTemplate(w, "form", data)
@@ -98,7 +88,7 @@ func routeIndexGet(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 	case "GET":
-		var tmpl = template.Must(template.New("form").ParseFiles("views/index.html", "views/_header.html"))
+		var tmpl = template.Must(template.New("form").ParseFiles("views/index.html"))
 		var err = tmpl.ExecuteTemplate(w, "form", nil)
 
 		if err != nil {

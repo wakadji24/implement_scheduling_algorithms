@@ -93,7 +93,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {{range $elem := .Result}}
+                                            {{range $elem := .Input}}
                                             <tr>
                                                 <td>{{index $elem 0}}</td>
                                                 <td>{{index $elem 1}}</td>
@@ -189,6 +189,8 @@
                                             {{end}}
                                         </tbody>
                                     </table>
+                                    <h4>Average Waiting Time : {{.Avwt}}</h4>
+                                    <h4>Average Turnaround Time : {{.Avtat}}</h4>
                                 </div>
                             </div>
                         </div>
