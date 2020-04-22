@@ -36,7 +36,7 @@ func routeIndexGet(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case "POST":
-		var tmpl = template.Must(template.New("form").ParseFiles("views/index.html"))
+		var tmpl = template.Must(template.New("form").ParseFiles("index.html"))
 
 		if err := r.ParseMultipartForm(1024); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -88,7 +88,7 @@ func routeIndexGet(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 	case "GET":
-		var tmpl = template.Must(template.New("form").ParseFiles("views/index.html"))
+		var tmpl = template.Must(template.New("form").ParseFiles("index.html"))
 		var err = tmpl.ExecuteTemplate(w, "form", nil)
 
 		if err != nil {
