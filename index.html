@@ -189,8 +189,11 @@
                                             {{end}}
                                         </tbody>
                                     </table>
-                                    <h4>Average Waiting Time : {{.Avwt}}</h4>
-                                    <h4>Average Turnaround Time : {{.Avtat}}</h4>
+                                    <hr>
+                                    <div class="container bg-danger shadow mb-4">
+                                        <p class="text-white text-center mt-2 mb-0">Average Waiting Time : {{.Avwt}}</p>
+                                        <p class="text-white text-center mb-4">Average Turnaround Time : {{.Avtat}}</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
